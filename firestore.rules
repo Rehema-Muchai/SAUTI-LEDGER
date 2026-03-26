@@ -1,0 +1,80 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: /users/{userId}
+    // Document ID: userId (string)
+    // Fields:
+    //   - uid: string (required)
+    //   - displayName: string (required)
+    //   - email: string (optional)
+    //   - phoneNumber: string (optional)
+    //   - isPhoneVerified: bool (optional)
+    //   - avg_30_day_revenue: number (optional)
+    //   - total_transactions: int (optional)
+    //
+    // Collection: /users/{userId}/ledger/{ledgerId}
+    // Document ID: ledgerId (string)
+    // Fields:
+    //   - uid: string (required)
+    //   - timestamp: string (required)
+    //   - item: string (required)
+    //   - quantity: string (optional)
+    //   - total_value: number (required)
+    //   - amount_paid: number (optional)
+    //   - debt: number (optional)
+    //   - trust_score: number (optional)
+    //   - risk_reasoning: string (optional)
+    //   - sheng_summary: string (optional)
+    //   - data_privacy_flag: bool (optional)
+    //   - next_7_days_prediction: number (optional)
+    //   - loan_readiness_meter: number (optional)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'displayName']) &&
+             data.uid is string &&
+             data.displayName is string && data.displayName.size() < 100;
+    }
+
+    function isValidLedgerEntry(data) {
+      return data.keys().hasAll(['uid', 'timestamp', 'item', 'total_value']) &&
+             data.uid is string &&
+             data.timestamp is string &&
+             data.item is string && data.item.size() < 200 &&
+             data.total_value is number;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data);
+      
+      match /ledger/{ledgerId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidLedgerEntry(request.resource.data);
+        allow update: if isOwner(userId) && isValidLedgerEntry(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}

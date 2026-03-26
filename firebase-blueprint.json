@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores user-specific settings and aggregate data.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "isPhoneVerified": { "type": "boolean" },
+        "avg_30_day_revenue": { "type": "number" },
+        "total_transactions": { "type": "integer" }
+      },
+      "required": ["uid", "displayName"]
+    },
+    "LedgerEntry": {
+      "title": "Ledger Entry",
+      "description": "A single financial transaction record extracted from audio.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "item": { "type": "string" },
+        "quantity": { "type": "string" },
+        "total_value": { "type": "number" },
+        "amount_paid": { "type": "number" },
+        "debt": { "type": "number" },
+        "trust_score": { "type": "number" },
+        "risk_reasoning": { "type": "string" },
+        "sheng_summary": { "type": "string" },
+        "data_privacy_flag": { "type": "boolean" },
+        "next_7_days_prediction": { "type": "number" },
+        "loan_readiness_meter": { "type": "number" }
+      },
+      "required": ["uid", "timestamp", "item", "total_value"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents."
+    },
+    "/users/{userId}/ledger": {
+      "schema": "LedgerEntry",
+      "description": "Collection of ledger entries for a specific user."
+    }
+  }
+}

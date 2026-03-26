@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-slate-900: #0F172A;
+  --color-gold-500: #C5A059;
+  --color-savannah-green: #2EB82E;
+  --color-emerald-glow: #10B981;
+  --color-amber-pulse: #F59E0B;
+}
+
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-[16px] bg-white/5 border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+  }
+  
+  .glass-dark {
+    @apply backdrop-blur-[16px] bg-black/20 border border-white/5 shadow-2xl;
+  }
+
+  .glow-green {
+    @apply shadow-[0_0_15px_rgba(46,184,46,0.3)] border-savannah-green;
+  }
+
+  .glow-emerald {
+    @apply shadow-[0_0_20px_rgba(16,185,129,0.2)] border-emerald-glow/30;
+  }
+
+  .glow-amber {
+    @apply shadow-[0_0_20px_rgba(245,158,11,0.2)] border-amber-pulse/30;
+  }
+}
+
+body {
+  @apply bg-slate-900 text-white antialiased;
+}
+
+/* Custom scrollbar for glassmorphism */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+}

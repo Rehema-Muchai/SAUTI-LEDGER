@@ -1,0 +1,5 @@
+{
+  "name": "Sauti-Ledger Engine",
+  "description": "Financial auditor for the Kenyan informal economy that extracts structured data from market transaction audio.",
+  "requestFramePermissions": ["microphone"]
+}
